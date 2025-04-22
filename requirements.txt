@@ -1,0 +1,13 @@
+langchain 
+langchain-huggingface
+huggingface_hub[hf_xet]
+langchain-community
+sentence-transformers
+faiss-cpu 
+python-dotenv 
+fastapi 
+uvicorn 
+pydantic 
+tiktoken 
+docker 
+pytest

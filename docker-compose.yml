@@ -1,0 +1,17 @@
+services:
+  ai-assistant:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+    environment:
+      - OLLAMA_API_BASE_URL=http://host.docker.internal:11434
+    restart: unless-stopped
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile-frontend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
