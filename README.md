@@ -57,6 +57,7 @@ This project provides an AI-powered assistant designed to help product and engin
    source venv/bin/activate  # For Linux/macOS
    .\venv\Scripts\activate  # For Windows
    pip install -r requirements.txt
+   uvicorn app.main:app --host 0.0.0.0 --port 8000 & open index.html
    
    ```
 
@@ -92,7 +93,7 @@ Once the application is up and running, you can access the Swagger documentation
 - **Vector Search**: FAISS (Facebook AI Similarity Search) is used for efficient semantic search, improving the accuracy of query results.
 - **Agent-Based Query Routing**: Queries are intelligently routed to the appropriate tool or agent for accurate and efficient processing.
 - **Optimized API Usage**: Efficient prompt design tailored for the Mistral:7b:Q4_0 model on Ollama, minimizing costs and optimizing performance.
-uvicorn app.main:app --host 0.0.0.0 --port 8000 & open index.html
+
 ## Tools & Technologies
 
 - **Model**: Mistral:7b:Q4_0 is used for AI-powered query processing. The model is integrated via Ollama setup.
