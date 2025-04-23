@@ -119,3 +119,10 @@ Watch how to run the AI Assistant in two ways:
 ### 🐳 Run with Docker
 
 [![Docker Setup Video](https://img.youtube.com/vi/Ai5NxZsfX7U/0.jpg)](https://youtu.be/Ai5NxZsfX7U)
+
+## 🚧 Future Improvements
+
+- **Concurrency Handler**: Add robust concurrency handling using async queues or worker pools to better manage simultaneous queries and improve performance under load.
+- **Live Document Syncing**: Automatically sync new internal reports or documents into the vector store without requiring manual reloads.
+- **Interactive Feedback Loop**: Enable users to give feedback on answers to improve relevance and fine-tune future results.
+- **Model Adapter Support**: Plug-and-play support for other LLMs like LLaMA or Mixtral via adapters.
