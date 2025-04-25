@@ -1,9 +1,9 @@
 import os
 from langchain_community.llms import Ollama
-from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from pydantic import BaseModel, Field
 from enum import Enum
+from app.utils.prompts import ROUTER_PROMPT
 
 class ToolType(str, Enum):
     QA = "qa"
@@ -28,53 +28,8 @@ class RouterAgent:
             temperature=0
         )
         
-        # Create a specialized prompt for intelligent routing
-        self.prompt_template = """
-        You are a query router for an internal AI assistant. Your job is to determine which tool should handle a given query.
-
-        Available tools:
-        1. QA Tool ("qa"): Answers factual questions about bugs, features, or user feedback using internal documentation.
-        2. Summary Tool ("summary"): Takes issue text and summarizes the reported issues, affected features, and severity.
-        3. Unknown Tool ("unknown"): For anything that doesn't fit.
-
-        USER QUERY: {query}
-
-        ### EXAMPLES
-
-        User Query: "What are the issues reported on email notifications?"
-        Response:
-        {{"tool": "qa", "reasoning": "The user is asking about issues mentioned in the documentation.", "reformulated_query": "List all reported issues related to email notifications."}}
-
-        User Query: "Users say the dashboard doesn't update on mobile."
-        Response:
-        {{"tool": "summary", "reasoning": "This is an issue report needing summarization of problem and affected component.", "reformulated_query": "Summarize: Users say the dashboard doesn't update on mobile."}}
-
-        User Query: "Hello, can you help me?"
-        Response:
-        {{"tool": "unknown", "reasoning": "This query doesn't match QA or summarization tasks.", "reformulated_query": "Hello, can you help me?"}}
-
-        INSTRUCTIONS:
-        Analyze the query and determine which tool should handle it.
-        If the query doesn't match any tool, respond with "unknown".
-
-        Think step-by-step about what the user is asking:
-        1. What is the user trying to accomplish?
-        2. Which tool best addresses this need?
-        3. How should I reformulate the query for the selected tool?
-
-        Respond with JSON containing:
-        - tool: "qa", "summary", or "unknown"
-        - reasoning: Brief explanation of why you chose this tool
-        - reformulated_query: The query reformulated for the chosen tool
-
-        RESPONSE:
-        """
-
-        
-        self.router_prompt = PromptTemplate(
-            template=self.prompt_template,
-            input_variables=["query"]
-        )
+        # Initialize the prompt template
+        self.router_prompt = ROUTER_PROMPT
         
         self.router_chain = LLMChain(
             llm=self.llm,

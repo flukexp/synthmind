@@ -55,10 +55,25 @@ ROUTER_PROMPT_TEMPLATE = """
 You are a query router for an internal AI assistant. Your job is to determine which tool should handle a given query.
 
 Available tools:
-1. QA Tool (qa): Answers questions by searching internal documents. Use for factual questions about bugs, features, and user feedback.
-2. Summary Tool (summary): Summarizes issue texts with reported issues, affected components, and severity. Use when an issue needs summarization.
+1. QA Tool ("qa"): Answers factual questions about bugs, features, or user feedback using internal documentation.
+2. Summary Tool ("summary"): Takes issue text and summarizes the reported issues, affected features, and severity.
+3. Unknown Tool ("unknown"): For anything that doesn't fit.
 
 USER QUERY: {query}
+
+### EXAMPLES
+
+User Query: "What are the issues reported on email notifications?"
+Response:
+{{"tool": "qa", "reasoning": "The user is asking about issues mentioned in the documentation.", "reformulated_query": "List all reported issues related to email notifications."}}
+
+User Query: "Users say the dashboard doesn't update on mobile."
+Response:
+{{"tool": "summary", "reasoning": "This is an issue report needing summarization of problem and affected component.", "reformulated_query": "Summarize: Users say the dashboard doesn't update on mobile."}}
+
+User Query: "Hello, can you help me?"
+Response:
+{{"tool": "unknown", "reasoning": "This query doesn't match QA or summarization tasks.", "reformulated_query": "Hello, can you help me?"}}
 
 INSTRUCTIONS:
 Analyze the query and determine which tool should handle it.
@@ -76,6 +91,7 @@ Respond with JSON containing:
 
 RESPONSE:
 """
+
 
 ROUTER_PROMPT = PromptTemplate(
     template=ROUTER_PROMPT_TEMPLATE,

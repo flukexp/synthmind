@@ -1,8 +1,8 @@
 import os
 from langchain_community.llms import Ollama
 from langchain.chains import LLMChain
-from langchain.prompts import PromptTemplate
 from pydantic import BaseModel, Field
+from app.utils.prompts import SUMMARY_PROMPT
 
 class SummaryToolInput(BaseModel):
     issue_text: str = Field(description="The issue text to summarize")
@@ -22,31 +22,8 @@ class SummaryTool:
             temperature=0
         )
         
-        # Create a specialized prompt for issue summarization
-        self.prompt_template = """
-        You are a technical analyst responsible for categorizing and summarizing product issues.
-        
-        ISSUE TEXT:
-        {issue_text}
-        
-        INSTRUCTIONS:
-        Analyze the issue text and provide a structured summary with the following components:
-        1. Extract all distinct reported issues
-        2. Identify all affected features or components
-        3. Assess the severity (Critical, High, Medium, Low)
-        
-        Format your response as JSON with these keys:
-        - reported_issues: [list of issues]
-        - affected_components: [list of components]
-        - severity: "severity level"
-        
-        SUMMARY:
-        """
-        
-        self.summary_prompt = PromptTemplate(
-            template=self.prompt_template,
-            input_variables=["issue_text"]
-        )
+        # Initialize prompt for issue summarization
+        self.summary_prompt = SUMMARY_PROMPT
         
         self.summary_chain = LLMChain(
             llm=self.llm,

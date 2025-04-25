@@ -1,8 +1,8 @@
 import os
 from langchain.chains import RetrievalQA
 from langchain_community.llms import Ollama
-from langchain.prompts import PromptTemplate
 from pydantic import BaseModel, Field
+from app.utils.prompts import QA_PROMPT
 
 class QAToolInput(BaseModel):
     query: str = Field(description="The question to answer about internal documents")
@@ -22,29 +22,8 @@ class QATool:
             temperature=0
         )
         
-        # Craft a specialized prompt template for accurate and context-aware responses
-        self.prompt_template = """
-        You are an AI assistant for a product and engineering team.
-        Your task is to answer questions accurately based on the internal documents provided.
-        
-        Question: {question}
-        
-        Context information from relevant documents:
-        {context}
-        
-        Instructions:
-        1. Answer based ONLY on the context provided
-        2. If the answer is not in the context, say "I don't have enough information to answer this"
-        3. Be concise and direct in your answer
-        4. Format the answer in a structured way if appropriate
-        
-        Answer:
-        """
-        
-        self.qa_prompt = PromptTemplate(
-            template=self.prompt_template,
-            input_variables=["question", "context"]
-        )
+        # Initialize the prompt template
+        self.qa_prompt = QA_PROMPT
         
         self.retriever = self.vectorstore.as_retriever(
             search_type="similarity",
